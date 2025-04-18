@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: forum_postgres
+    environment:
+      POSTGRES_DB: forum_db
+      POSTGRES_USER: forum_user
+      POSTGRES_PASSWORD: forum_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - forum_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    container_name: forum_adminer
+    ports:
+      - "8080:8080"
+
+  tomcat:
+    image: tomcat:7
+    container_name: forum_tomcat
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./target/Mini-forum-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/Mini-forum.war
+    depends_on:
+      - postgres
+
+volumes:
+  forum_data:
